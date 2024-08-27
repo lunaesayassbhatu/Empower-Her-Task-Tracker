@@ -1,3 +1,39 @@
+// Function to save tasks to Local Storage
+function saveTasks() {
+    const taskCards = document.querySelectorAll('.task-card');
+    taskCards.forEach(card => {
+        const taskList = card.querySelector('.task-list');
+        const tasks = [];
+        taskList.querySelectorAll('li').forEach(li => {
+            const taskDetails = li.textContent.replace('Remove', '').trim();
+            tasks.push(taskDetails);
+        });
+        localStorage.setItem(card.id, JSON.stringify(tasks));
+    });
+}
+
+// Function to load tasks from Local Storage
+function loadTasks() {
+    const taskCards = document.querySelectorAll('.task-card');
+    taskCards.forEach(card => {
+        const tasks = JSON.parse(localStorage.getItem(card.id)) || [];
+        const taskList = card.querySelector('.task-list');
+        tasks.forEach(task => {
+            const listItem = document.createElement('li');
+            listItem.textContent = task;
+            listItem.innerHTML += '<button class="remove-btn">Remove</button>';
+            taskList.appendChild(listItem);
+
+            // Add event listener for the remove button in loaded tasks
+            listItem.querySelector('.remove-btn').addEventListener('click', function() {
+                card.querySelector('.task-list').removeChild(listItem);
+                saveTasks(); // Update local storage after removal
+            });
+        });
+    });
+}
+
+// Add event listeners for all forms
 document.querySelectorAll('.task-form').forEach(form => {
     form.addEventListener('submit', function(event) {
         event.preventDefault();
@@ -35,3 +71,6 @@ document.querySelectorAll('.task-form').forEach(form => {
         this.querySelector('.tax-input').value = 'pending'; // Reset tax payment status
     });
 });
+
+// Load tasks from local storage when the page loads
+document.addEventListener('DOMContentLoaded', loadTasks);
