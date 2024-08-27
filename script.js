@@ -1,22 +1,22 @@
 // Function to save tasks to Local Storage
 function saveTasks() {
-    const taskCards = document.querySelectorAll('.task-card');
-    taskCards.forEach(card => {
+    document.querySelectorAll('.task-card').forEach(card => {
+        const cardId = card.id;
         const taskList = card.querySelector('.task-list');
         const tasks = [];
         taskList.querySelectorAll('li').forEach(li => {
             const taskDetails = li.textContent.replace('Remove', '').trim();
             tasks.push(taskDetails);
         });
-        localStorage.setItem(card.id, JSON.stringify(tasks));
+        localStorage.setItem(cardId, JSON.stringify(tasks));
     });
 }
 
 // Function to load tasks from Local Storage
 function loadTasks() {
-    const taskCards = document.querySelectorAll('.task-card');
-    taskCards.forEach(card => {
-        const tasks = JSON.parse(localStorage.getItem(card.id)) || [];
+    document.querySelectorAll('.task-card').forEach(card => {
+        const cardId = card.id;
+        const tasks = JSON.parse(localStorage.getItem(cardId)) || [];
         const taskList = card.querySelector('.task-list');
         tasks.forEach(task => {
             const listItem = document.createElement('li');
